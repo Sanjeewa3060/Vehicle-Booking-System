@@ -1,0 +1,40 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f8f9fc;
+}
+
+.hero {
+  min-height: 80vh;
+}
+
+.stats {
+  background: #ffffff;
+}
+
+.feature-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+}
+
+.feature-card i {
+  font-size: 2rem;
+  color: #0d6efd;
+  margin-bottom: 15px;
+}
+
+.how-it-works {
+  background: #ffffff;
+}
+
+.steps li {
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.footer ul li {
+  margin-bottom: 8px;
+  cursor: pointer;
+}
