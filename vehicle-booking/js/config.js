@@ -1,7 +1,5 @@
 function getBaseUrl() {
-  const path = window.location.pathname.replace(/\/+$/, "");
-  const lastSlash = path.lastIndexOf("/");
-  return lastSlash > 0 ? path.substring(0, lastSlash) : "";
+  return "http://localhost/PHP%20Project/vehicle-booking";
 }
 
 const API_URL = `${getBaseUrl()}/api`;

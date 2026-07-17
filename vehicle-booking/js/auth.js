@@ -1,7 +1,5 @@
 function getBaseUrl() {
-  const path = window.location.pathname.replace(/\/+$/, "");
-  const lastSlash = path.lastIndexOf("/");
-  return lastSlash > 0 ? path.substring(0, lastSlash) : "";
+  return "http://localhost/PHP%20Project/vehicle-booking";
 }
 
 const BASE_URL = getBaseUrl();
@@ -16,7 +14,7 @@ function checkAuth() {
 function buildApiUrl(endpoint) {
   const normalizedBase = BASE_URL.replace(/\/+$/, "");
   const normalizedEndpoint = endpoint.replace(/^\/+/, "");
-  return encodeURI(`${normalizedBase}/api/${normalizedEndpoint}`);
+  return `${normalizedBase}/api/${normalizedEndpoint}`;
 }
 
 async function apiCall(endpoint, method = "GET", data = null) {
