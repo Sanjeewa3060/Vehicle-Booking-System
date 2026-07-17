@@ -1,5 +1,5 @@
 function getBaseUrl() {
-  return "http://localhost/PHP%20Project/vehicle-booking";
+  return window.location.href;
 }
 
 const BASE_URL = getBaseUrl();
@@ -12,9 +12,8 @@ function checkAuth() {
 }
 
 function buildApiUrl(endpoint) {
-  const normalizedBase = BASE_URL.replace(/\/+$/, "");
   const normalizedEndpoint = endpoint.replace(/^\/+/, "");
-  return `${normalizedBase}/api/${normalizedEndpoint}`;
+  return new URL(`api/${normalizedEndpoint}`, BASE_URL).toString();
 }
 
 async function apiCall(endpoint, method = "GET", data = null) {

@@ -15,7 +15,16 @@ $database = new Database();
 $db = $database->getConnection();
 
 $rawInput = file_get_contents("php://input");
-$data = json_decode($rawInput, true);
+$data = [];
+
+if (!empty($rawInput)) {
+    $decoded = json_decode($rawInput, true);
+    if (is_array($decoded)) {
+        $data = $decoded;
+    } else {
+        parse_str($rawInput, $data);
+    }
+}
 
 if (!is_array($data)) {
     $data = [];

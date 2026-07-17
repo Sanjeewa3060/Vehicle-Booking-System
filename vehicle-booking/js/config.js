@@ -1,5 +1,5 @@
 function getBaseUrl() {
-  return "http://localhost/PHP%20Project/vehicle-booking";
+  return window.location.href;
 }
 
 const API_URL = `${getBaseUrl()}/api`;
@@ -25,7 +25,7 @@ async function apiCall(endpoint, method = "GET", data = null) {
   }
 
   try {
-    const response = await fetch(`${API_URL}${endpoint}`, options);
+    const response = await fetch(new URL(`api${endpoint}`, window.location.href).toString(), options);
     const responseText = await response.text();
     let result = {};
 
