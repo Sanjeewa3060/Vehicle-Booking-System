@@ -1,0 +1,225 @@
+================================================================================
+QUICK START GUIDE - VEHICLE BOOKING SYSTEM
+================================================================================
+
+PROJECT: Vehicle Booking System v2.0
+STATUS: ✅ Production Ready
+ALL ISSUES: ✅ FIXED
+
+================================================================================
+SETUP INSTRUCTIONS:
+================================================================================
+
+1. DATABASE SETUP:
+   
+   Run these SQL commands:
+   
+   CREATE DATABASE vehicle_booking;
+   
+   USE vehicle_booking;
+   
+   CREATE TABLE users (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(100) NOT NULL,
+     email VARCHAR(100) UNIQUE NOT NULL,
+     password VARCHAR(255) NOT NULL,
+     role ENUM('user', 'admin') DEFAULT 'user',
+     status ENUM('active', 'inactive') DEFAULT 'active',
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+   
+   CREATE TABLE vehicles (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(100) NOT NULL,
+     type VARCHAR(50) NOT NULL,
+     price DECIMAL(10,2) NOT NULL,
+     status ENUM('Available', 'Booked') DEFAULT 'Available',
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+   
+   CREATE TABLE bookings (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     user_id INT NOT NULL,
+     vehicle_id INT NOT NULL,
+     start_date DATE NOT NULL,
+     end_date DATE NOT NULL,
+     status ENUM('Active', 'Completed', 'Cancelled') DEFAULT 'Active',
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     FOREIGN KEY (user_id) REFERENCES users(id),
+     FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
+   );
+
+2. INSERT TEST DATA:
+   
+   -- Test Users
+   INSERT INTO users (name, email, password, role, status) VALUES
+   ('Admin User', 'admin@test.com', '$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36DxYLji', 'admin', 'active'),
+   ('John Doe', 'john@test.com', '$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36DxYLji', 'user', 'active'),
+   ('Jane Smith', 'jane@test.com', '$2y$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36DxYLji', 'user', 'active');
+   
+   -- Test Vehicles
+   INSERT INTO vehicles (name, type, price, status) VALUES
+   ('Toyota Camry', 'Sedan', 50.00, 'Available'),
+   ('Honda CR-V', 'SUV', 75.00, 'Available'),
+   ('Ford F-150', 'Truck', 100.00, 'Available'),
+   ('Nissan Altima', 'Sedan', 45.00, 'Available'),
+   ('BMW X5', 'SUV', 120.00, 'Available');
+
+3. CONFIGURATION:
+   
+   Edit api/config/database.php if using different credentials:
+   - host: localhost
+   - database_name: vehicle_booking
+   - username: root
+   - password: (empty for XAMPP default)
+   
+   Update api/helpers/jwt.php:
+   - Change secret_key for production use
+
+4. FILE PERMISSIONS:
+   
+   Ensure these directories are writable:
+   - api/
+   - js/
+   
+5. SERVER REQUIREMENTS:
+   
+   - PHP 7.2 or higher
+   - MySQL/MariaDB
+   - PDO extension enabled
+   - cURL enabled
+   - json extension enabled
+
+================================================================================
+ACCESSING THE APPLICATION:
+================================================================================
+
+Home Page:
+  http://localhost/vehicle-booking/
+
+Public Pages:
+  - Home: http://localhost/vehicle-booking/index.html
+  - Vehicles: http://localhost/vehicle-booking/vehicles.html
+  - Login: http://localhost/vehicle-booking/login.html
+  - Register: http://localhost/vehicle-booking/register.html
+
+User Access (After Login):
+  - Dashboard: http://localhost/vehicle-booking/user-dashboard.html
+  - Bookings: http://localhost/vehicle-booking/booking-history.html
+  - Balance: http://localhost/vehicle-booking/balance.html
+
+Admin Access (After Admin Login):
+  - Dashboard: http://localhost/vehicle-booking/admin-dashboard.html
+  - Vehicles: http://localhost/vehicle-booking/admin-vehicles.html
+
+================================================================================
+TEST CREDENTIALS:
+================================================================================
+
+Admin Account:
+  Email: admin@test.com
+  Password: password (or set your own)
+
+User Account:
+  Email: john@test.com
+  Password: password (or set your own)
+
+Note: The password hash provided is for 'password'
+Use bcrypt tool to generate new hashes if needed.
+
+================================================================================
+API TESTING WITH CURL:
+================================================================================
+
+1. LOGIN AND GET TOKEN:
+   
+   curl -X POST http://localhost/vehicle-booking/api/auth/login.php \
+     -H "Content-Type: application/json" \
+     -d '{"email":"john@test.com","password":"password"}'
+   
+   Response will include a JWT token.
+
+2. GET VEHICLES:
+   
+   curl http://localhost/vehicle-booking/api/vehicles/list.php
+
+3. GET USER STATS (Requires Token):
+   
+   curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+     http://localhost/vehicle-booking/api/user/dashboard-stats.php
+
+4. CREATE BOOKING:
+   
+   curl -X POST http://localhost/vehicle-booking/api/bookings/create.php \
+     -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{"vehicle_id":1,"start_date":"2026-01-25","end_date":"2026-01-27"}'
+
+================================================================================
+FEATURES:
+================================================================================
+
+USER FEATURES:
+  ✓ User registration and login
+  ✓ Browse available vehicles
+  ✓ Book vehicles for specific dates
+  ✓ View booking history
+  ✓ Cancel bookings
+  ✓ View dashboard stats
+  ✓ Check account balance
+
+ADMIN FEATURES:
+  ✓ Dashboard with statistics
+  ✓ View all vehicles
+  ✓ Add new vehicles
+  ✓ Edit vehicle details
+  ✓ Delete vehicles
+  ✓ View all bookings
+  ✓ Manage user accounts
+
+================================================================================
+TROUBLESHOOTING:
+================================================================================
+
+Issue: "Connection error" when accessing API
+Solution:
+  - Check database connection in api/config/database.php
+  - Verify MySQL service is running
+  - Check database credentials
+
+Issue: "Unauthorized" error
+Solution:
+  - Ensure JWT token is included in Authorization header
+  - Verify token hasn't expired (7 days)
+  - Check browser console for token issues
+
+Issue: "Forbidden: Admin access required"
+Solution:
+  - Only admin users can access admin endpoints
+  - Create admin account or promote user to admin role
+
+Issue: CORS errors
+Solution:
+  - Check api/config/cors.php headers
+  - Verify API_URL in js/config.js matches your server
+
+Issue: JavaScript errors in console
+Solution:
+  - Clear browser cache
+  - Verify all JS files are loading (F12 → Network tab)
+  - Check for syntax errors in console
+
+================================================================================
+SUPPORT & DOCUMENTATION:
+================================================================================
+
+API Documentation: See PROJECT_STATUS.txt for complete endpoint reference
+Database Schema: Review SQL commands above
+Security: All endpoints use JWT and role-based access control
+Error Handling: All errors return JSON with appropriate HTTP status codes
+
+================================================================================
+VERSION: 2.0
+RELEASE DATE: January 24, 2026
+STATUS: ✅ PRODUCTION READY
+================================================================================
