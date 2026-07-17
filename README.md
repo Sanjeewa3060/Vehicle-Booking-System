@@ -1,1 +1,412 @@
-# Vehicle-Booking-System
+# 🚗 Vehicle Booking System - Full Stack Web Application
+
+A modern, responsive vehicle booking system built with HTML, CSS, JavaScript (Frontend) and PHP with MySQL (Backend).
+
+## 📁 Project Structure
+
+```
+vehicle-booking-system/
+│
+├── index.html                  # Landing page
+├── login.html                  # User login
+├── register.html               # User registration
+├── user-dashboard.html         # User dashboard
+├── vehicles.html               # Vehicle listing
+├── booking.html                # Booking page
+├── booking-history.html        # User's booking history
+├── admin-dashboard.html        # Admin dashboard
+├── admin-vehicles.html         # Manage vehicles
+├── admin-bookings.html         # Manage bookings
+├── admin-users.html            # Manage users
+│
+├── css/
+│   └── style.css              # Main stylesheet
+│
+├── js/
+│   ├── config.js              # API configuration
+│   ├── auth.js                # Authentication logic
+│   ├── dashboard.js           # User dashboard logic
+│   ├── vehicles.js            # Vehicle listing logic
+│   ├── booking.js             # Booking logic
+│   ├── booking-history.js     # Booking history logic
+│   ├── admin-dashboard.js     # Admin dashboard logic
+│   ├── admin-vehicles.js      # Admin vehicle management
+│   └── admin-bookings.js      # Admin booking management
+│
+└── api/
+    ├── config/
+    │   ├── database.php       # Database connection
+    │   └── cors.php           # CORS headers
+    │
+    ├── helpers/
+    │   └── jwt.php            # JWT token handling
+    │
+    ├── auth/
+    │   ├── login.php          # User login endpoint
+    │   └── register.php       # User registration endpoint
+    │
+    ├── vehicles/
+    │   ├── list.php           # Get all vehicles
+    │   └── details.php        # Get vehicle details
+    │
+    ├── bookings/
+    │   ├── create.php         # Create booking
+    │   ├── user-bookings.php  # Get user bookings
+    │   └── cancel.php         # Cancel booking
+    │
+    ├── user/
+    │   └── dashboard-stats.php # User dashboard statistics
+    │
+    └── admin/
+        ├── dashboard-stats.php # Admin statistics
+        ├── vehicles/
+        │   ├── list.php       # List all vehicles
+        │   ├── create.php     # Create vehicle
+        │   ├── update.php     # Update vehicle
+        │   ├── delete.php     # Delete vehicle
+        │   └── details.php    # Vehicle details
+        │
+        ├── bookings/
+        │   └── list.php       # List all bookings
+        │
+        └── users/
+            └── list.php       # List all users
+```
+
+## 🎨 Design Specifications
+
+- **Primary Color:** Blue (#007BFF)
+- **Secondary Color:** White & Light Gray (#F5F5F5)
+- **Accent Color:** Orange (#FF6600)
+- **Typography:** Poppins (Google Fonts)
+- **Design Style:** Clean, minimal, professional
+- **Responsive:** Mobile-first approach
+
+## 🚀 Installation & Setup
+
+### Prerequisites
+
+- PHP 7.4 or higher
+- MySQL 5.7 or higher
+- Web server (Apache/Nginx) or XAMPP/WAMP/MAMP
+- Modern web browser
+
+### Step 1: Database Setup
+
+1. Create a new MySQL database:
+
+```sql
+CREATE DATABASE vehicle_booking;
+```
+
+2. Run the following SQL to create tables:
+
+```sql
+USE vehicle_booking;
+
+-- Users table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('user', 'admin') DEFAULT 'user',
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Vehicles table
+CREATE TABLE vehicles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    status ENUM('Available', 'Booked', 'Unavailable') DEFAULT 'Available',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Bookings table
+CREATE TABLE bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    vehicle_id INT NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    status ENUM('Active', 'Completed', 'Cancelled') DEFAULT 'Active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE
+);
+
+-- Insert sample admin user (password: admin123)
+INSERT INTO users (name, email, password, role) VALUES 
+('Admin User', 'admin@vehiclebook.com', 'Ranabima@3030', 'admin');
+
+-- Insert sample vehicles
+INSERT INTO vehicles (name, type, price, status) VALUES
+('Tesla Model 3', 'Electric', 120.00, 'Available'),
+('BMW X5', 'SUV', 150.00, 'Available'),
+('Mercedes C-Class', 'Sedan', 130.00, 'Available'),
+('Toyota Camry', 'Sedan', 80.00, 'Available'),
+('Honda CR-V', 'SUV', 90.00, 'Available'),
+('Audi A4', 'Sedan', 140.00, 'Available');
+```
+
+### Step 2: Configure Database Connection
+
+Edit `api/config/database.php` with your database credentials:
+
+```php
+private $host = "localhost";
+private $database_name = "vehicle_booking";
+private $username = "root";      // Your MySQL username
+private $password = "";          // Your MySQL password
+```
+
+### Step 3: Update API URL
+
+Edit `js/config.js` and update the API URL:
+
+```javascript
+const API_URL = 'http://localhost/vehicle-booking/api';
+// Change this to match your local setup
+```
+
+### Step 4: Deploy Files
+
+**For XAMPP:**
+1. Copy the entire project folder to `C:\xampp\htdocs\vehicle-booking`
+2. Start Apache and MySQL from XAMPP Control Panel
+3. Access: `http://localhost/vehicle-booking/index.html`
+
+**For WAMP:**
+1. Copy to `C:\wamp64\www\vehicle-booking`
+2. Start WAMP
+3. Access: `http://localhost/vehicle-booking/index.html`
+
+**For MAMP:**
+1. Copy to `/Applications/MAMP/htdocs/vehicle-booking`
+2. Start MAMP
+3. Access: `http://localhost/vehicle-booking/index.html`
+
+### Step 5: Test the Application
+
+**Default Admin Credentials:**
+- Email: `admin@vehiclebook.com`
+- Password: `admin123`
+
+**Create a User Account:**
+- Go to Register page
+- Fill in the form
+- Login with your credentials
+
+## 📱 Features
+
+### User Features
+- ✅ User Registration & Login
+- ✅ Browse Available Vehicles
+- ✅ View Vehicle Details
+- ✅ Book Vehicles with Date Selection
+- ✅ View Booking History
+- ✅ Cancel Active Bookings
+- ✅ Dashboard with Statistics
+
+### Admin Features
+- ✅ Admin Dashboard with Statistics
+- ✅ Manage Vehicles (CRUD Operations)
+- ✅ View All Bookings
+- ✅ View All Users
+- ✅ Update Vehicle Status
+- ✅ Monitor System Activity
+
+## 🎯 Usage Guide
+
+### For Users:
+
+1. **Register/Login**
+   - Create an account or login
+   - Access user dashboard
+
+2. **Browse Vehicles**
+   - View all available vehicles
+   - Check prices and availability
+
+3. **Book a Vehicle**
+   - Select a vehicle
+   - Choose start and end dates
+   - Confirm booking
+
+4. **Manage Bookings**
+   - View all bookings
+   - Cancel active bookings
+
+### For Admins:
+
+1. **Login with Admin Credentials**
+   - Use admin email and password
+
+2. **Manage Vehicles**
+   - Add new vehicles
+   - Edit existing vehicles
+   - Delete vehicles
+   - Update availability status
+
+3. **Monitor Bookings**
+   - View all bookings
+   - Track booking statuses
+
+4. **User Management**
+   - View all registered users
+   - Monitor user activity
+
+## 🔐 Security Features
+
+- Password hashing using bcrypt
+- JWT token-based authentication
+- SQL injection prevention with prepared statements
+- XSS protection
+- CSRF protection ready
+- Role-based access control
+
+## 📊 Database Schema
+
+### Users Table
+- `id` - Primary key
+- `name` - User's full name
+- `email` - Unique email address
+- `password` - Hashed password
+- `role` - user/admin
+- `status` - active/inactive
+- `created_at` - Registration timestamp
+
+### Vehicles Table
+- `id` - Primary key
+- `name` - Vehicle name
+- `type` - Vehicle type (SUV, Sedan, etc.)
+- `price` - Price per day
+- `status` - Available/Booked/Unavailable
+- `created_at` - Creation timestamp
+
+### Bookings Table
+- `id` - Primary key
+- `user_id` - Foreign key to users
+- `vehicle_id` - Foreign key to vehicles
+- `start_date` - Booking start date
+- `end_date` - Booking end date
+- `status` - Active/Completed/Cancelled
+- `created_at` - Booking timestamp
+
+## 🛠️ API Endpoints
+
+### Authentication
+- `POST /api/auth/register.php` - Register new user
+- `POST /api/auth/login.php` - User login
+
+### Vehicles
+- `GET /api/vehicles/list.php` - Get all vehicles
+- `GET /api/vehicles/details.php?id={id}` - Get vehicle details
+
+### Bookings
+- `POST /api/bookings/create.php` - Create booking
+- `GET /api/bookings/user-bookings.php` - Get user bookings
+- `POST /api/bookings/cancel.php` - Cancel booking
+
+### User Dashboard
+- `GET /api/user/dashboard-stats.php` - Get user statistics
+
+### Admin (Requires Admin Token)
+- `GET /api/admin/dashboard-stats.php` - Admin statistics
+- `GET /api/admin/vehicles/list.php` - List vehicles
+- `POST /api/admin/vehicles/create.php` - Create vehicle
+- `POST /api/admin/vehicles/update.php` - Update vehicle
+- `POST /api/admin/vehicles/delete.php` - Delete vehicle
+
+## 🎨 Customization
+
+### Changing Colors
+
+Edit `css/style.css` and modify CSS variables:
+
+```css
+:root {
+    --primary-color: #007BFF;    /* Change primary color */
+    --accent-color: #FF6600;     /* Change accent color */
+    --secondary-color: #F5F5F5;  /* Change background color */
+}
+```
+
+### Adding New Vehicle Types
+
+Simply add vehicles through the admin panel or insert directly into database.
+
+### Modifying JWT Secret
+
+Edit `api/helpers/jwt.php`:
+
+```php
+private static $secret_key = "your-new-secret-key-here";
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues:
+
+1. **Database Connection Failed**
+   - Check database credentials in `api/config/database.php`
+   - Ensure MySQL service is running
+
+2. **API Calls Not Working**
+   - Verify API URL in `js/config.js`
+   - Check CORS settings in `api/config/cors.php`
+   - Enable mod_rewrite if using Apache
+
+3. **Login Issues**
+   - Clear browser cache and localStorage
+   - Check database for user records
+   - Verify password hashing
+
+4. **403 Forbidden Errors**
+   - Check file permissions
+   - Ensure .htaccess is properly configured
+
+## 📝 Additional Files Needed
+
+Create these additional admin pages following the same pattern:
+
+- `admin-bookings.html` - Admin bookings management
+- `admin-users.html` - Admin user management
+- `js/admin-bookings.js` - Admin bookings logic  
+- `js/admin-users.js` - Admin users logic
+
+And these PHP endpoints:
+
+- `api/admin/bookings/list.php`
+- `api/admin/users/list.php`
+- `api/admin/users/update.php`
+- `api/admin/users/delete.php`
+
+## 💡 Future Enhancements
+
+- [ ] Email notifications
+- [ ] Payment gateway integration
+- [ ] Vehicle images upload
+- [ ] Advanced search filters
+- [ ] Booking calendar view
+- [ ] User reviews and ratings
+- [ ] Multi-language support
+- [ ] PDF invoice generation
+
+## 📄 License
+
+This project is open source and available for educational purposes.
+
+## 👨‍💻 Support
+
+For issues or questions:
+1. Check the troubleshooting section
+2. Review the code comments
+3. Verify your setup matches the requirements
+
+---
+
+**Happy Coding! 🚀**
